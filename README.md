@@ -67,7 +67,59 @@ npx playwright test --reporter=html
 
 ## Continuous Integration
 
-This project includes a GitHub Actions workflow to automatically run Playwright tests on every push request to the master branch. The workflow is defined in .github/workflows/playwright-tests.yml.
+This project includes a GitHub Actions workflow to automatically run Playwright tests on every push request to the `master` branch. The workflow is defined in `.github/workflows/playwright-tests.yml` and includes environment variables for authentication and test execution.
+
+### GitHub Actions Workflow
+
+Ensure your repository’s GitHub Actions secrets contain the following environment variables:
+
+- `BASE_URL`
+- `GOOGLE_USERNAME`
+- `GOOGLE_PASSWORD`
+- `PROFILE_PICTURE_URL`
+- `TARGET_YOUTUBE_CHANNEL_ID`
+- `USERNAME`
+- `PASSWORD`
+
+Example configuration in the workflow file:
+
+```yaml
+name: Playwright Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npx playwright test
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        GOOGLE_USERNAME: ${{ secrets.GOOGLE_USERNAME }}
+        GOOGLE_PASSWORD: ${{ secrets.GOOGLE_PASSWORD }}
+        PROFILE_PICTURE_URL: ${{ secrets.PROFILE_PICTURE_URL }}
+        TARGET_YOUTUBE_CHANNEL_ID: ${{ secrets.TARGET_YOUTUBE_CHANNEL_ID }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+```
 
 ## Test Structure
 
@@ -94,4 +146,4 @@ This project includes a GitHub Actions workflow to automatically run Playwright 
 - Run `npx playwright test` before submitting PRs
 - Document changes in the README or relevant test files
 
-For any issues, please create a GitHub issue or reach out to the project maintainers.
+For any issues, please create a GitHub issue or reach out to me at michael.oloruntobi@gmail.com.
