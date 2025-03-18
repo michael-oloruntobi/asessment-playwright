@@ -65,6 +65,10 @@ Run tests with HTML report:
 npx playwright test --reporter=html
 ```
 
+## Continuous Integration
+
+This project includes a GitHub Actions workflow to automatically run Playwright tests on every push request to the master branch. The workflow is defined in .github/workflows/playwright-tests.yml.
+
 ## Test Structure
 
 - `tests/` – Contains all test files
