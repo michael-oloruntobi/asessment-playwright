@@ -19,6 +19,14 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        GOOGLE_USERNAME: ${{ secrets.GOOGLE_USERNAME }}
+        GOOGLE_PASSWORD: ${{ secrets.GOOGLE_PASSWORD }}
+        PROFILE_PICTURE_URL: ${{ secrets.PROFILE_PICTURE_URL }}
+        TARGET_YOUTUBE_CHANNEL_ID: ${{ secrets.TARGET_YOUTUBE_CHANNEL_ID }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
