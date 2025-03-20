@@ -1,7 +1,38 @@
+
 # Social Connect Test Automation
 
 ## Overview
 This project contains automated tests for the Social Connect feature using Playwright. The tests validate social media integrations, such as YouTube authentication and profile verification.
+
+The architecture of this project is designed to ensure **maintainability**, **scalability**, and **readability**. Key architectural choices include:
+
+1. **Page Object Model (POM)**:
+   - The project uses the Page Object Model pattern to encapsulate interactions with specific pages or components (e.g., the Google login page or the YouTube connection flow).
+   - This approach centralizes locators and actions, making tests easier to maintain and reducing code duplication.
+
+2. **Environment Variables**:
+   - Sensitive data (e.g., credentials, URLs) is stored in a `.env` file and accessed via environment variables.
+   - This ensures security and flexibility across different environments (e.g., local, CI/CD).
+
+3. **Modular Design**:
+   - The project is organized into modular directories:
+     - `tests/`: Contains test files.
+     - `pages/`: Contains Page Object Model classes for interacting with specific pages or components.
+     - `utils/`: Contains utility functions (e.g., authentication helpers).
+   - This modular structure makes it easy to add new tests or extend functionality.
+
+4. **Error Handling and Debugging**:
+   - Playwright’s built-in features (e.g., screenshots, tracing, and retries) are leveraged to simplify debugging and improve test reliability.
+   - Tests are designed to handle errors gracefully, with clear error messages and fallback mechanisms.
+
+5. **Continuous Integration (CI)**:
+   - The project includes a GitHub Actions workflow to run tests automatically on every push or pull request.
+   - Environment variables are securely managed using GitHub Secrets.
+
+6. **Scalability**:
+   - The architecture is designed to support additional test cases and integrations (e.g., other social media platforms) without significant refactoring.
+
+---
 
 ## Prerequisites
 Ensure you have the following installed before running the tests:
@@ -11,12 +42,14 @@ Ensure you have the following installed before running the tests:
 - Playwright (latest version)
 - Google Chrome or Chromium-based browser
 
+---
+
 ## Setup Instructions
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/social-connect-tests.git
-   cd social-connect-tests
+   git clone https://github.com/repo-url
+   cd your-test-folder
    ```
 2. Install dependencies:
    ```sh
@@ -27,6 +60,8 @@ Ensure you have the following installed before running the tests:
    npx playwright install
    ```
 4. Create a `.env` file in the root directory and add the required environment variables (see below).
+
+---
 
 ## Environment Variables
 
@@ -42,6 +77,8 @@ USERNAME=me
 PASSWORD=SmipMe123456
 ```
 > **Note:** Use secure methods to store sensitive credentials (e.g., environment secrets in CI/CD pipelines).
+
+---
 
 ## Running Tests
 
@@ -64,6 +101,8 @@ Run tests with HTML report:
 ```sh
 npx playwright test --reporter=html
 ```
+
+---
 
 ## Continuous Integration
 
@@ -121,29 +160,79 @@ jobs:
         retention-days: 30
 ```
 
+---
+
 ## Test Structure
 
-- `tests/` – Contains all test files
-- `pages/` – Page Object Model (POM) classes for better test maintainability
-- `utils/` – Utility functions, such as authentication helpers
-- `playwright.config.js` – Playwright configuration file
+- `tests/` – Contains all test files.
+- `pages/` – Page Object Model (POM) classes for better test maintainability.
+- `utils/` – Utility functions, such as authentication helpers.
+- `playwright.config.js` – Playwright configuration file.
+
+---
 
 ## Error Handling & Debugging
 
-- Run tests with `DEBUG=pw:api npx playwright test` to see API calls
-- Check Playwright’s trace viewer with `--trace on-first-retry`
+### Debugging with Screenshots
+Playwright automatically captures screenshots on test failure. These screenshots are saved in the `test-results` directory and can be viewed in the HTML report.
+
+To enable screenshots manually, use the `screenshot` option in the Playwright configuration:
+
+```javascript
+use: {
+  screenshot: 'on',
+}
+```
+
+### Using Trace Viewer
+Playwright’s Trace Viewer provides a detailed timeline of test execution, including network requests, DOM snapshots, and more. To enable tracing, add the following to your Playwright configuration:
+
+```javascript
+use: {
+  trace: 'on-first-retry',
+}
+```
+
+Run tests with tracing enabled, and view the trace using:
+
+```sh
+npx playwright show-trace trace.zip
+```
+
+### Retry Mechanism
+Playwright includes a built-in retry mechanism for flaky tests. You can configure the number of retries in the `playwright.config.js` file:
+
+```javascript
+export default {
+  retries: 2, // Retry failed tests up to 2 times
+};
+```
+
+### Debugging Tips
+- Run tests with `DEBUG=pw:api npx playwright test` to see API calls and debug logs.
+- Use `--headed` mode to run tests in a visible browser window.
+- Use `--slowmo` to slow down test execution for better observation:
+
+```sh
+npx playwright test --slowmo 1000
+```
+
+---
 
 ## Security Considerations
 
-- Avoid logging sensitive data
-- Use `.env` instead of hardcoding credentials
-- Implement secure authentication handling in CI/CD pipelines
+- Avoid logging sensitive data.
+- Use `.env` instead of hardcoding credentials.
+- Implement secure authentication handling in CI/CD pipelines.
+
+---
 
 ## Contribution Guidelines
 
-- Follow Playwright best practices
-- Use descriptive commit messages
-- Run `npx playwright test` before submitting PRs
-- Document changes in the README or relevant test files
+- Follow Playwright best practices.
+- Use descriptive commit messages.
+- Run `npx playwright test` before submitting PRs.
+- Document changes in the README or relevant test files.
 
 For any issues, please create a GitHub issue or reach out to me at michael.oloruntobi@gmail.com.
+```
