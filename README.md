@@ -41,6 +41,7 @@ Ensure you have the following installed before running the tests:
 - npm or yarn
 - Playwright (latest version)
 - Google Chrome or Chromium-based browser
+- docker
 
 ---
 
@@ -89,7 +90,7 @@ npx playwright test
 
 Run a specific test file:
 ```sh
-npx playwright test tests/socialConnect.spec.js
+npx playwright test tests/socialConnect.spec.ts
 ```
 
 Run tests in headed mode:
@@ -102,6 +103,32 @@ Run tests with HTML report:
 npx playwright test --reporter=html
 ```
 
+## Docker Execution
+
+# Build image
+```sh
+npm run docker-build
+```
+
+# Run container
+```sh
+npm run docker-test
+```
+
+# Trigger tests via API
+```sh
+curl -X POST http://localhost:3000/run-automation
+```
+
+# Get results
+```sh
+npm run docker-results
+```
+
+# Stop container
+```sh
+npm run docker-stop
+```
 ---
 
 ## Continuous Integration
@@ -167,7 +194,7 @@ jobs:
 - `tests/` – Contains all test files.
 - `pages/` – Page Object Model (POM) classes for better test maintainability.
 - `utils/` – Utility functions, such as authentication helpers.
-- `playwright.config.js` – Playwright configuration file.
+- `playwright.config.ts` – Playwright configuration file.
 
 ---
 
