@@ -1,26 +1,32 @@
-# Use the official Playwright image with Node.js and required browsers
-FROM mcr.microsoft.com/playwright:v1.51.1-jammy
+FROM mcr.microsoft.com/playwright:v1.42.1-jammy
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json ./
+# Copy package.json files
+COPY package.json tsconfig.json package-lock.json* ./ 
 
 # Install dependencies
 RUN npm ci
+RUN npm install playwright
+RUN npx playwright install-deps
+RUN npm install --save-dev @types/express
 
 # Install Playwright browsers
-RUN npx playwright install --with-deps
+RUN npx playwright install chrome
 
-# Copy the rest of the application files
+# Copy project files
 COPY . .
 
-# Build TypeScript project
+# Build TypeScript
 RUN npx tsc
 
-# Expose API port
+# Expose the API port
 EXPOSE 3000
 
-# Start the API server
-CMD ["npm",  "run", "start"]
+# Define environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Command to run the API server
+CMD ["node", "dist/src/server.js"]

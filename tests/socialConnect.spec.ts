@@ -2,14 +2,32 @@ import { test, expect, Page } from '@playwright/test';
 import { SocialConnectPage } from '../pages/SocialConnectPage';
 import { loginToGoogle } from '../utils/authUtils';
 
+// Define expected environment variables with proper types.
+const usernames: string | undefined = process.env.USERNAME;
+const password: string | undefined = process.env.PASSWORD;
+const baseURL: string | undefined = process.env.BASE_URL;
+
+if (!usernames || !password) {
+  throw new Error('USERNAME and PASSWORD must be defined in the .env file.');
+}
+
+if (!baseURL) {
+  throw new Error('BASE_URL must be defined in the .env file.');
+}
+
 test.describe('Social Connect Tests', () => {
   let socialConnectPage: SocialConnectPage;
 
+  // Set up the test environment.
   test.beforeEach(async ({ page }: { page: Page }) => {
     try {
       socialConnectPage = new SocialConnectPage(page);
-      await page.context().clearCookies();
-      await page.goto('/');
+
+      // Construct the authenticated URL with credentials
+      const authenticatedURL = `https://me:${password}@${baseURL}/`;
+
+      // Navigate to the authenticated URL
+      await page.goto(authenticatedURL);
     } catch (error: unknown) {
       console.error('Error during beforeEach setup:', error);
       if (error instanceof Error) {

@@ -28,7 +28,20 @@ export class SocialConnectPage {
 
   // Navigates to the Social Connect page and clicks on the YouTube card
   async navigateToYoutube(): Promise<void> {
-    await this.page.goto('/social-connect/');
+       // Fetch the credentials from the environment variables
+       const username = process.env.USERNAME;
+       const password = process.env.PASSWORD;
+       const baseURL = process.env.BASE_URL;
+   
+       if (!username || !password || !baseURL) {
+         throw new Error('USERNAME, PASSWORD, and BASE_URL must be defined in the .env file.');
+       }
+   
+       // Construct the URL with credentials for HTTP Basic Authentication
+       const authenticatedURL = `https://me:${password}@${baseURL}/social-connect/`;
+   
+       // Navigate to the authenticated URL
+       await this.page.goto(authenticatedURL);
     await this.youtubeCard.click();
   }
 
